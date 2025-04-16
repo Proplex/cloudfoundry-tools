@@ -30,12 +30,12 @@ mapped_apps = ["instance_guid,app_guid,app_name,org_name,space_name"]
 with open("/tmp/cfdot-output.json", 'r') as lrp_data_raw:
     lrp_data = json.load(lrp_data_raw)
     for app in lrp_data:
-        if app['state'] is "RUNNING":
+        if app['state'] == "RUNNING":
             try:
                 mapped_apps.append(
                     f"{app['instance_guid']},{app['metric_tags']['app_id']},{app['metric_tags']['app_name']},{app['metric_tags']['organization_name']},{app['metric_tags']['space_name']}")
             except KeyError as err:
-                print(f"Error fetching app details for the following: {app['process_guid']}; BBS says it is running but has no further information. Skipping. Actual error: {err}.")
+                print(f"Error fetching app details for the following: {app['process_guid']}; BBS says it is running but has no further information. Skipping. Missing key: {err}.")
                 continue
         else:
             print(f"App with process GUID {app['process_guid']} is crashed; cannot get information. Skipping.")
